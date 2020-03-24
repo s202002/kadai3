@@ -1,17 +1,26 @@
 <table class="table">
-		<tr><%= attachment_image_tag(user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg") %></tr>
+	<tr><%= attachment_image_tag(user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg") %></tr>
 
-		<tr>
-			<th>name</th>
-			<th><%= user.name %></th>
-		</tr>
+	<tr>
+		<th>name</th>
+		<th><%= user.name %></th>
+	</tr>
 
-		<tr>
-			<th>introduction</th>
-			<th><%= user.introduction %></th>
-		</tr>
+	<tr>
+		<th>introduction</th>
+		<th><%= user.introduction %></th>
+	</tr>
+	<td><%= link_to "フォロー数: #{user.follower.count}", follower_user_path(user) %></td>
+	<td><%= link_to "フォロワー数: #{user.followed.count}", followed_user_path(user) %></td>
 </table>
 
 <div class="row">
 	<%= link_to '',edit_user_path(user), class: "col-xs-12 btn btn-default glyphicon glyphicon-wrench edit_user_#{user.id}" %>
 </div>
+<% unless current_user.id == user.id %>
+<% if current_user.following?(user) %>
+<%= link_to 'フォローをやめる', unfollow_path(user.id), method: :POST %>
+<% else %>
+<%= link_to 'フォローする', follow_path(user.id), method: :POST %>
+<% end %>
+<% end %>
